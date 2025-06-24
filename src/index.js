@@ -8,7 +8,7 @@ dotenv.config({
 connectDB()
 .then(()=>{
     app.listen(process.env.PORT||5000,()=>{
-        console.log("MongoDB connected at port",`${process.env.PORT}`)
+        console.log("server runnning at port",`${process.env.PORT}`)
     })
 }
 )
