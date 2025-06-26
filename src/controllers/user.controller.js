@@ -17,6 +17,7 @@ const registerUser=asyncHandler(async(req,res)=>{
    //return res
     
    const {fullName,email,username,password}=req.body
+   // console.log(req.body)
 
    if(
     [fullName,email,username,password].some((fields)=>fields?.trim()=== "")
@@ -24,7 +25,7 @@ const registerUser=asyncHandler(async(req,res)=>{
     throw new ApiError(400,"All fields are requried")
    }
 
-   const existedUser=User.findOne({
+   const existedUser=await User.findOne({
     $or:[{ username },{ email }]
    })
 
@@ -33,17 +34,27 @@ const registerUser=asyncHandler(async(req,res)=>{
    }
 
    const avatarLoacalPath=req.files?.avatar[0]?.path;
-   const coverImageLoacalPath=req.files?.coverImage[0]?.path;
+   // const coverImageLoacalPath=req.files?.coverImage[0]?.path;
+
+   let coverImageLoacalPath;
+   if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+      coverImageLoacalPath=req.files.coverImage[0].path
+
+   }
+
+   // console.log(avatarLoacalPath)
 
    if(!avatarLoacalPath){
-    throw new ApiError(400,"Avatar is requrired")
+    throw new ApiError(400,"Avatar is requrired ")
    }
 
    const avatar = await uploadOnCloudinary(avatarLoacalPath)
-   const coverImage= await uploadOnCloudinary(coverImageLoacalPathLoacalPath)
+   const coverImage= await uploadOnCloudinary(coverImageLoacalPath)
+   // console.log(avatar);
+   
 
    if(!avatar){
-    throw new ApiError(400,"Avatar is requrired")
+    throw new ApiError(400,"Avatar is requrired ")
    }
 
    const user= await User.create({

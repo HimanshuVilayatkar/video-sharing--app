@@ -28,7 +28,7 @@ const userSchema= new Schema
             trim:true,
             index:true
         },
-        avtar:{
+        avatar:{
             type:String,
             reqired:true
         },
@@ -54,10 +54,10 @@ const userSchema= new Schema
 {timestamps:true})
 
 userSchema.pre("save", async function(next){
-    if(!this.Modified("password")) return next()
+    if(!this.isModified("password")) return next()
 
-
-    this.password=await bcrypt.hash(this.password,10)
+     const salt=10
+    this.password=await bcrypt.hash(this.password,salt)
     next()
 })
 
